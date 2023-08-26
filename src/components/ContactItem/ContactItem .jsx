@@ -1,5 +1,9 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+
+import { deleteContact } from 'redux/store/phoneBookSlice';
+
 import { IoMdContact } from 'react-icons/io';
 import { TiDelete } from 'react-icons/ti';
 import {
@@ -10,10 +14,8 @@ import {
   DeleteButton,
 } from './ContactItem.styled';
 
-export const ContactItem = ({ contact, onDeleteContact }) => {
-  const handleDelete = () => {
-    onDeleteContact(contact.id);
-  };
+export const ContactItem = contact => {
+  const dispatch = useDispatch();
 
   return (
     <ContactItemContainer>
@@ -22,7 +24,10 @@ export const ContactItem = ({ contact, onDeleteContact }) => {
       </ContactIcon>
       <ContactName>{contact.name}</ContactName>: tel:
       <ContactNumber>{contact.number}</ContactNumber>
-      <DeleteButton type="button" onClick={handleDelete}>
+      <DeleteButton
+        type="button"
+        onClick={() => dispatch(deleteContact(contact.id))}
+      >
         <TiDelete />
       </DeleteButton>
     </ContactItemContainer>
@@ -34,5 +39,5 @@ ContactItem.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     number: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
 };

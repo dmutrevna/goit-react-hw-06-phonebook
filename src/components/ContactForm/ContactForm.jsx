@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import Notify from 'notiflix';
+
+import { addContact, selectContacts } from 'redux/store/phoneBookSlice';
+
 import { FormContainer, SubTitle } from './ContactForm.styled';
 
-export const ContactForm = ({ addContact }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const contacts = useSelector(selectContacts);
+  const dispatch = useDispatch();
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -19,10 +24,15 @@ export const ContactForm = ({ addContact }) => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    if (name.trim() === '' || number.trim() === '') {
+    const isContactExist = contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (isContactExist) {
+      Notify.failure(`${name} is already in contacts`);
       return;
     }
-    addContact({ id: nanoid(), name, number });
+    dispatch(addContact({ name, number }));
     setName('');
     setNumber('');
   };
@@ -35,9 +45,9 @@ export const ContactForm = ({ addContact }) => {
         name="name"
         pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-        required
         value={name}
         onChange={handleChange}
+        required
       />
       <SubTitle>Number</SubTitle>
       <input
@@ -45,15 +55,11 @@ export const ContactForm = ({ addContact }) => {
         name="number"
         pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-        required
         value={number}
         onChange={handleChange}
+        required
       />
       <button type="submit">Add contact</button>
     </FormContainer>
   );
-};
-
-ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
 };
