@@ -14,7 +14,7 @@ import {
   DeleteButton,
 } from './ContactItem.styled';
 
-export const ContactItem = ({ contact }) => {
+export const ContactItem = contact => {
   const dispatch = useDispatch();
 
   return (
