@@ -11,7 +11,8 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import phoneBookSlice from './phoneBookSlice';
+import phoneBookReducer from './phoneBookSlice';
+import filterReducer from './filterSlice';
 
 const persistConfig = {
   key: 'contacts',
@@ -19,10 +20,16 @@ const persistConfig = {
   blacklist: ['filter'],
 };
 
-const persistedReducer = persistReducer(persistConfig, phoneBookSlice);
+const persistedPhoneBookReducer = persistReducer(
+  persistConfig,
+  phoneBookReducer
+);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    contacts: persistedPhoneBookReducer,
+    filter: filterReducer,
+  },
   middleware: getDefaultMiddleware({
     serializableCheck: {
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],

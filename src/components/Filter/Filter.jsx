@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import { FilterForm, FilterLabel, FilterInput } from './Filter.styled';
-import { setFilter } from 'redux/store/phoneBookSlice';
+import { setFilter } from 'redux/store/filterSlice';
 
 export const Filter = () => {
   const dispatch = useDispatch();
