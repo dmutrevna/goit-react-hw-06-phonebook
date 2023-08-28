@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Notify from 'notiflix';
 
-import { addContact, selectContacts } from 'redux/store/phoneBookSlice';
+import { addContactThunk } from 'redux/store/operations';
+import { selectContacts } from 'redux/store/selectors';
 
 import { FormContainer, SubTitle } from './ContactForm.styled';
 
@@ -32,7 +33,7 @@ export const ContactForm = () => {
       Notify.failure(`${name} is already in contacts`);
       return;
     }
-    dispatch(addContact({ name, number }));
+    dispatch(addContactThunk({ name, number }));
     setName('');
     setNumber('');
   };
